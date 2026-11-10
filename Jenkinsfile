@@ -4,26 +4,35 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out source code'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Validate Docker Compose') {
             steps {
-                echo 'Building application'
+                sh 'docker compose config'
             }
         }
 
-        stage('Test') {
+        stage('Build and Deploy') {
             steps {
-                echo 'Testing application'
+                sh 'docker compose up -d --build'
             }
         }
 
-        stage('Deploy') {
+        stage('Verify Deployment') {
             steps {
-                echo 'Deployment completed'
+                sh 'docker compose ps'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'React application deployed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the Jenkins console output.'
         }
     }
 }
