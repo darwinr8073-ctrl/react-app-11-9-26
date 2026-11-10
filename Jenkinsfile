@@ -2,27 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Validate Docker Compose') {
             steps {
-                sh 'docker compose config'
+                sh 'docker-compose config'
             }
         }
 
         stage('Build and Deploy') {
             steps {
-                sh 'docker compose up -d --build'
+                sh 'docker-compose up -d --build'
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                sh 'docker compose ps'
+                sh 'docker-compose ps'
             }
         }
     }
